@@ -56,6 +56,7 @@ function searchThroughApi(input_src,my_api){
       if (results.length>0){
         console.log(results ,"results ");
 
+
         // Handlebars section-----------------------
         var template = $('#template').html();
         var compiled = Handlebars.compile( template);
@@ -67,6 +68,7 @@ function searchThroughApi(input_src,my_api){
           var original_title = results[i]['original_title'];
           var lang = results[i]['original_language'];
           var vote = results[i]['vote_average'];
+          var integer =  getInteger(vote);
 
           // Handlebars object -----------------------
           var cardHTML = compiled(
@@ -75,9 +77,18 @@ function searchThroughApi(input_src,my_api){
             'original_title' : original_title ,
             'lang' : lang,
             'vote': vote
-            });
+            }
+          )
+
+          console.log("integer",integer);
+          console.log("vote", vote);
+
+
           target.append(cardHTML);
-          }
+
+          console.log("APPEND");
+
+        }// Main for cycle end
 
       } else{
         alert("nessun risultato trovato");
@@ -91,10 +102,30 @@ function searchThroughApi(input_src,my_api){
   });
 }
 
+
+
+
+function getInteger(vote){
+  console.log("--------getInteger()----------");
+  var integer = Math.ceil(vote);
+  console.log("num",integer);
+  var container = $('#container');
+  for (var i = 0; i < 10; i++) {
+    if(i<vote){
+      container.append("<i class='yellow fa fa-star'></i>");
+    }else{
+      container.append("<i class='fa fa-star'></i>");
+    }
+  }
+  return integer;
+}
+
+
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
   inputContentRequest();
+
 }
 
 // 1) Document Ready-----
