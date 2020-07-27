@@ -41,7 +41,8 @@ function searchThroughApi(input_src,my_api){
     data: {
 
       'api_key': my_api,
-      'query': input_src
+      'query': input_src,
+      'language': 'it' //get italian title and informations
     },
 
     success : function(data, results){
