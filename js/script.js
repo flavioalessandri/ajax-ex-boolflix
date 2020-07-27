@@ -24,55 +24,69 @@ function getInputValue(){
   input_value.val('');
 
   console.log("valore input: ", input_src);
-  searchThroughApi(input_src);
-  // return input_src;
+  var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
+  searchThroughApi(input_src,my_api);
+
 }
 
-function searchThroughApi(input_src){
+
+function searchThroughApi(input_src,my_api){
 
   $.ajax({
 
-    url: 'https://api.themoviedb.org/3/search/movie?api_key=8de22b0db5bf3f29ea5ff07f53e09484',
+    url: 'https://api.themoviedb.org/3/search/movie',
 
     method: "GET",
 
-    data:{
+    data: {
+
+      'api_key': my_api,
       'query': input_src
     },
 
-    success : function(data, state){
+    success : function(data, results){
 
-      var movie_card = data['results'];
-      console.log("data['results']",movie_card);
-        var movie_card = data['results'];
+      console.log(data);
 
-      if (movie_card.length > 0){
+      var results = data['results'];
+      console.log("data['results']",results );
 
-        var title = movie_card[0]['title'];
-        var original_title = movie_card[0]['original_title'];
-        var lang = movie_card[0]['original_language'];
-        var vote = movie_card[0]['vote_average'];
-        var list = title,original_title,lang,vote;
+      if (results.length>0){
+        console.log(results ,"results ");
 
-        console.log("data['results']", movie_card);
-        console.log("movie_card['original_language']", lang );
-        console.log("movie_card['vote_average']", vote);
-        console.log("element list", list);
+        // Handlebars section-----------------------
+        var template = $('#template').html();
+        var compiled = Handlebars.compile( template);
+        var target = $('#container');
+        target.html('');
 
+        for (var i = 0; i < results.length; i++) {
+          var title = results[i]['title'];
+          var original_title = results[i]['original_title'];
+          var lang = results[i]['original_language'];
+          var vote = results[i]['vote_average'];
+
+          // Handlebars object -----------------------
+          var cardHTML = compiled(
+            {
+            'title': title,
+            'original_title' : original_title ,
+            'lang' : lang,
+            'vote': vote
+            });
+          target.append(cardHTML);
+          }
 
       } else{
-        console.log("nessun risultato trovato");
+        alert("nessun risultato trovato");
       }
+    }, //end of object - success
 
-
-    },
-
-    error: function(err){
-      console.log("errore",err);
+    error: function(errors){
+      console.log("errore",errors);
     }
   });
 }
-
 
 // MAIN FUNCTION CONTAINER ------------------------
 

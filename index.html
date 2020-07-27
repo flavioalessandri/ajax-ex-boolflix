@@ -18,10 +18,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
-
-    <!-- Handlebars template content -->
+    <div class="{{title}}">
+      <h2>{{title}}</h2>
+      <h2>{{original_title}}</h2>
+      <h3>{{lang}}</h3>
+      <h4>{{vote}}</h4>
+    </div>
 
   </script>
+
 
 
   <title>Boolflix</title>
@@ -33,12 +38,13 @@
     <div id="search_bar" class="">
       <input id="src_input" type="text" name="" placeholder="Search Content" value="">
       <button id="src_btn" type="button" name="button">Search</button>
-
     </div>
   </header>
 
+
   <main>
-    <div class="container">
+    <div id="container" class="container">
+
 
    </div>   <!-- end of container -->
 
