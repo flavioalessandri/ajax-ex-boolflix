@@ -68,7 +68,7 @@ function searchThroughApi(input_src,my_api){
           var original_title = results[i]['original_title'];
           var lang = results[i]['original_language'];
           var vote = results[i]['vote_average'];
-          var integer =  getInteger(vote);
+
 
           // Handlebars object -----------------------
           var cardHTML = compiled(
@@ -85,6 +85,7 @@ function searchThroughApi(input_src,my_api){
 
 
           target.append(cardHTML);
+          var integer =  getStarsRating(vote);
 
           console.log("APPEND");
 
@@ -105,19 +106,19 @@ function searchThroughApi(input_src,my_api){
 
 
 
-function getInteger(vote){
-  console.log("--------getInteger()----------");
-  var integer = Math.ceil(vote);
-  console.log("num",integer);
-  var container = $('#container');
+function getStarsRating(vote){
+  console.log("--------getStarsRating()----------");
+  var stars_rating = Math.ceil(vote);
+
+  var target = $('#container');
   for (var i = 0; i < 10; i++) {
     if(i<vote){
-      container.append("<i class='yellow fa fa-star'></i>");
+      target.append("<i class='yellow fa fa-star'></i>");
     }else{
-      container.append("<i class='fa fa-star'></i>");
+      target.append("<i class='fa fa-star'></i>");
     }
   }
-  return integer;
+  return stars_rating;
 }
 
 
