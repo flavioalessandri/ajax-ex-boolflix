@@ -25,6 +25,7 @@ function getInputValue(){
 
   console.log("valore input: ", input_src);
   var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
+  //var my_api = "8de22b0db5bf3f29ea5ff07f53e09464"; //wrong api to verify correct error message
   searchThroughApi(input_src,my_api);
 
 }
@@ -84,7 +85,8 @@ function searchThroughApi(input_src,my_api){
     }, //end of object - success
 
     error: function(errors){
-      console.log("errore",errors);
+      var errors = errors['status'];
+      alert("errore "+errors);
     }
   });
 }
