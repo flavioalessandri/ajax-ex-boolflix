@@ -73,6 +73,7 @@ function searchThroughApi(input_src,my_api){
 
           target.append(cardHTML);
           getStarsRating(id,stars_rating);
+          prova();
 
         }// Main for cycle end
 
@@ -86,6 +87,12 @@ function searchThroughApi(input_src,my_api){
       alert("errore "+errors);
     }
   });
+}
+
+function prova(){
+  $.getScript('lang.js', function() {
+  console.log("HELLOOO");
+});
 }
 
 
