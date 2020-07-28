@@ -18,11 +18,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
-    <li class="movie" date-id = "{{id}}" date-rate={{vote_average}}>
-      <span class="title">{{title}}</span>
-      <span class="original_title">  {{original_title}}</span>
-      <span class="original_language"> {{original_language}}</span>
-      <img class="language" src="img/{{original_language}}.png" alt="{{original_language}}"> <br>
+    <li class="movie" date-type="{{film}}{{tv-show}}" date-id="{{id}}" date-rate={{vote_average}}>
+      <span class="title">{{title}}{{name}}</span>
+      <span class="original_title">{{original_title}}{{original_name}}</span>
+
+      <img class="language" src="img/{{original_language}}.png" alt="{{lang_name}}"> <br>
       <span class="vote">  {{vote_average}}</span>
       <span class="rating"></span>
         <span class="{{ciccio}}"></span>

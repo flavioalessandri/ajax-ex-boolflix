@@ -1,15 +1,4 @@
 
-// Milestone 1:
-// Creare un layout base con una searchbar (una input e un button) in cui possiamo
-// scrivere completamente o parzialmente il nome di un film. Possiamo, cliccando il
-// bottone, cercare sull’API tutti i film che contengono ciò che ha scritto l’utente.
-// Vogliamo dopo la risposta dell’API visualizzare a schermo i seguenti valori per ogni
-// film trovato:
-// 1. Titolo
-// 2. Titolo Originale
-// 3. Lingua
-// 4. Voto
-
 // -----start new function---------------------------
 // define the Button used to get input value
 function inputContentRequest(){
@@ -20,18 +9,22 @@ function inputContentRequest(){
 // -----start new function---------------------------
 // get input value after button click
 function getInputValue(){
+  var target = $('#container');
+  target.html('');
   var input_value = $('#src_input');
   var input_src =$('#src_input').val();
   input_value.val('');
 
   console.log("valore input: ", input_src);
   var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
-  searchThroughApi(input_src,my_api);
+  searchThroughMovieApi(target,input_src,my_api);
+  searchThroughTvApi(target,input_src,my_api);
+
 }
 
 // -----start new function---------------------------
-function searchThroughApi(input_src,my_api){
-
+function searchThroughMovieApi(target,input_src,my_api){
+  console.log("searchThrough---------Movie---------Api");
   $.ajax({
 
     url: 'https://api.themoviedb.org/3/search/movie',
@@ -39,7 +32,6 @@ function searchThroughApi(input_src,my_api){
     method: "GET",
 
     data: {
-
       'api_key': my_api,
       'query': input_src,
       'language': 'it' //get italian title and informations
@@ -56,29 +48,29 @@ function searchThroughApi(input_src,my_api){
         // Handlebars section-----------------------
         var template = $('#template').html();
         var compiled = Handlebars.compile( template);
-        var target = $('#container');
-        target.html('');
+        // var target = $('#container');
+        // target.html('');
 
         for (var i = 0; i < movies.length; i++) {
           var movie = movies[i];
-          var vote = movies[i]['vote_average'];
-          var id = movies[i]['id'];
+          var vote = movie['vote_average'];
+          var id = movie['id'];
           var stars_rating = Math.round(vote/2);
+          var lang_code = movie["original_language"];
+          var lang_name = getLanguageName(lang_code);//function from lang.js
 
-          // debug per inserimento propieta in un oggetto
-          movies[i]['ciccio'] = "pippo";
+          movie['lang_name'] = lang_name ;
+          movie['film'] = "film" ;
 
           // Handlebars object -----------------------
           var cardHTML = compiled(movie);
 
           target.append(cardHTML);
           getStarsRating(id,stars_rating);
-          prova();
-
         }// Main for cycle end
 
       } else{
-        alert("nessun risultato trovato");
+        alert("No Movies Found");
       }
     }, //end of object - success
 
@@ -89,10 +81,65 @@ function searchThroughApi(input_src,my_api){
   });
 }
 
-function fareLog(){
-  console.log(isoLangs);
-}
 
+// -----start new function---------------------------
+function searchThroughTvApi(target,input_src,my_api){
+  console.log("------searchThrough---Tv-------Api--------------------");
+  $.ajax({
+
+    url: 'https://api.themoviedb.org/3/search/tv',
+
+    method: "GET",
+
+    data: {
+      'api_key': my_api,
+      'query': input_src,
+      'language': 'it' //get italian title and informations
+    },
+
+    success : function(data, results){
+
+      var tv_series = data['results'];
+      console.log("data['results']",results );
+
+      if (tv_series.length>0){
+        console.log(tv_series,"tv_series");
+
+        // Handlebars section-----------------------
+        var template = $('#template').html();
+        var compiled = Handlebars.compile( template);
+        // var target = $('#container');
+        // target.html('');
+
+        for (var i = 0; i < tv_series.length; i++) {
+          var tv_show = tv_series[i];
+          var vote = tv_show['vote_average'];
+          var id = tv_show['id'];
+          var stars_rating = Math.round(vote/2);
+          var lang_code = tv_show["original_language"];
+          var lang_name = getLanguageName(lang_code);//function from lang.js
+
+          tv_show['lang_name'] = lang_name ;
+          tv_show['tv-show'] = "tv-show" ;
+
+          // Handlebars object -----------------------
+          var tvHTML = compiled(tv_show);
+
+          target.append(tvHTML);
+          getStarsRating(id,stars_rating);
+        }// Main for cycle end
+
+      } else{
+        alert("No Tv Series Found");
+      }
+    }, //end of object - success
+
+    error: function(errors){
+      var errors = errors['status'];
+      alert("errore "+errors);
+    }
+  });
+}
 
 
 // -----start new function---------------------------
@@ -114,8 +161,8 @@ function getStarsRating(id,stars_rating){
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
-  fareLog();
-  // inputContentRequest();
+  // fareLog();
+  inputContentRequest();
 
 }
 
