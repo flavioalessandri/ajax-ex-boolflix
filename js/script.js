@@ -10,13 +10,14 @@
 // 3. Lingua
 // 4. Voto
 
-
+// -----start new function---------------------------
 // define the Button used to get input value
 function inputContentRequest(){
   var btn = $('#src_btn');
   btn.click(getInputValue);
-
 }
+
+// -----start new function---------------------------
 // get input value after button click
 function getInputValue(){
   var input_value = $('#src_input');
@@ -26,10 +27,9 @@ function getInputValue(){
   console.log("valore input: ", input_src);
   var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
   searchThroughApi(input_src,my_api);
-
 }
 
-
+// -----start new function---------------------------
 function searchThroughApi(input_src,my_api){
 
   $.ajax({
@@ -47,16 +47,11 @@ function searchThroughApi(input_src,my_api){
 
     success : function(data, results){
 
-      console.log(data);
-
-      var results = data['results'];
+      var movies = data['results'];
       console.log("data['results']",results );
 
-
-
-      if (results.length>0){
-        console.log(results,"results ");
-
+      if (movies.length>0){
+        console.log(movies,"movies");
 
         // Handlebars section-----------------------
         var template = $('#template').html();
@@ -64,36 +59,20 @@ function searchThroughApi(input_src,my_api){
         var target = $('#container');
         target.html('');
 
-        for (var i = 0; i < results.length; i++) {
-          var title = results[i]['title'];
-          var original_title = results[i]['original_title'];
-          var lang = results[i]['original_language'];
-          var vote = results[i]['vote_average'];
-          var id = results[i]['id'];
-          console.log("vote", vote);
+        for (var i = 0; i < movies.length; i++) {
+          var movie = movies[i];
+          var vote = movies[i]['vote_average'];
+          var id = movies[i]['id'];
           var stars_rating = Math.round(vote/2);
 
+          // debug per inserimento propieta in un oggetto
+          movies[i]['ciccio'] = "pippo";
 
           // Handlebars object -----------------------
-          var cardHTML = compiled(
-            {
-            'id' : id,
-            'title': title,
-            'original_title' : original_title ,
-            'original_language' : lang.toUpperCase(),
-            'vote_average': stars_rating
-            }
-          )
-
-
+          var cardHTML = compiled(movie);
 
           target.append(cardHTML);
           getStarsRating(id,stars_rating);
-
-
-
-
-          console.log("APPEND", cardHTML);
 
         }// Main for cycle end
 
@@ -110,7 +89,7 @@ function searchThroughApi(input_src,my_api){
 }
 
 
-
+// -----start new function---------------------------
 
 function getStarsRating(id,stars_rating){
   console.log("--------getStarsRating()----------");
@@ -124,9 +103,6 @@ function getStarsRating(id,stars_rating){
     }
   });
 }
-
-
-
 
 
 // MAIN FUNCTION CONTAINER ------------------------
