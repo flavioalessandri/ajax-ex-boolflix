@@ -18,14 +18,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
-    <div class="{{title}}">
-      <h2>{{title}}</h2>
-      <h2>{{original_title}}</h2>
-      <h3>{{lang}}</h3>
-      <h4>{{vote}}</h4>
-    </div>
+    <li class="movie" date-id = "{{id}}" date-rate={{vote_average}}>
+      <span class="title">{{title}}</span>
+      <span class="original_title">  {{original_title}}</span>
+      <span class="original_language"> {{original_language}}</span>
+      <img class="language" src="img/{{original_language}}.png" alt="{{original_language}}"> <br>
+      <span class="vote">  {{vote_average}}</span>
+      <span class="rating"></span>
 
+    </li>
   </script>
+
+<span>
+</span>
 
 
 
@@ -43,10 +48,9 @@
 
 
   <main>
-    <div id="container" class="container">
+    <ul id="container">
 
-
-   </div>   <!-- end of container -->
+    </ul>
 
   </main>
 

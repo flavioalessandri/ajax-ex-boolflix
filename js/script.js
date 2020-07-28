@@ -25,7 +25,6 @@ function getInputValue(){
 
   console.log("valore input: ", input_src);
   var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
-  //var my_api = "8de22b0db5bf3f29ea5ff07f53e09464"; //wrong api to verify correct error message
   searchThroughApi(input_src,my_api);
 
 }
@@ -53,8 +52,10 @@ function searchThroughApi(input_src,my_api){
       var results = data['results'];
       console.log("data['results']",results );
 
+
+
       if (results.length>0){
-        console.log(results ,"results ");
+        console.log(results,"results ");
 
 
         // Handlebars section-----------------------
@@ -68,26 +69,31 @@ function searchThroughApi(input_src,my_api){
           var original_title = results[i]['original_title'];
           var lang = results[i]['original_language'];
           var vote = results[i]['vote_average'];
+          var id = results[i]['id'];
+          console.log("vote", vote);
+          var stars_rating = Math.round(vote/2);
 
 
           // Handlebars object -----------------------
           var cardHTML = compiled(
             {
+            'id' : id,
             'title': title,
             'original_title' : original_title ,
-            'lang' : lang,
-            'vote': vote
+            'original_language' : lang.toUpperCase(),
+            'vote_average': stars_rating
             }
           )
 
-          console.log("integer",integer);
-          console.log("vote", vote);
 
 
           target.append(cardHTML);
-          var integer =  getStarsRating(vote);
+          getStarsRating(id,stars_rating);
 
-          console.log("APPEND");
+
+
+
+          console.log("APPEND", cardHTML);
 
         }// Main for cycle end
 
@@ -106,20 +112,21 @@ function searchThroughApi(input_src,my_api){
 
 
 
-function getStarsRating(vote){
+function getStarsRating(id,stars_rating){
   console.log("--------getStarsRating()----------");
-  var stars_rating = Math.ceil(vote);
-
-  var target = $('#container');
-  for (var i = 0; i < 10; i++) {
-    if(i<vote){
-      target.append("<i class='yellow fa fa-star'></i>");
-    }else{
-      target.append("<i class='fa fa-star'></i>");
+  $('li[date-id="'+id+'"]').each(function(){
+    for (var i = 0; i < 5; i++) {
+      if(i<stars_rating){
+        $(this).children('.rating').append("<i class= 'yellow fas fa-star'></i>");
+      }else{
+        $(this).children('.rating').append("<i class= 'fas fa-star'></i>");
+      }
     }
-  }
-  return stars_rating;
+  });
 }
+
+
+
 
 
 // MAIN FUNCTION CONTAINER ------------------------

@@ -19,6 +19,39 @@ h1{
   background-color: #9D0208;
 }
 
+#container{
+  display: flex;
+  justify-content: flex-start;
+  width:100%;
+  height: 100%;
+  flex-wrap: wrap;
+}
+
+#container{
+  display: flex;
+  justify-content: flex-start;
+  width:100%;
+  height: 100%;
+  flex-wrap: wrap;
+}
+
+.movie{
+  border:1px solid black;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: flex-start;
+  width:30%;
+}
+
+
+
 .yellow{
   color:yellow;
+}
+
+.language{
+  width:40px;
+  height:auto;
 }
