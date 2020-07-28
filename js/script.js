@@ -89,11 +89,10 @@ function searchThroughApi(input_src,my_api){
   });
 }
 
-function prova(){
-  $.getScript('lang.js', function() {
-  console.log("HELLOOO");
-});
+function fareLog(){
+  console.log(isoLangs);
 }
+
 
 
 // -----start new function---------------------------
@@ -115,7 +114,8 @@ function getStarsRating(id,stars_rating){
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
-  inputContentRequest();
+  fareLog();
+  // inputContentRequest();
 
 }
 
