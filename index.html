@@ -19,14 +19,14 @@
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
     <li class="movie" date-type="{{film}}{{tv-show}}" date-id="{{id}}" date-rate={{vote_average}}>
+      <img class="poster lg" src="{{poster}}" alt="{{poster}}"> <br>
+
       <span class="title">{{title}}{{name}}</span>
       <span class="original_title">{{original_title}}{{original_name}}</span>
 
       <img class="language" src="img/{{original_language}}.png" alt="{{lang_name}}"> <br>
-      <span class="vote">  {{vote_average}}</span>
-      <span class="rating"></span>
-        <span class="{{ciccio}}"></span>
-      {{lang_string}}
+      <span class="vote"> {{vote_average}}</span>
+      <span class="rating">Voto: </span>
 
     </li>
   </script>

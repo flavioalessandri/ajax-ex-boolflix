@@ -61,6 +61,7 @@ function searchThroughMovieApi(target,input_src,my_api){
 
           movie['lang_name'] = lang_name ;
           movie['film'] = "film" ;
+          movie['poster'] = getPosterImage(movie);
 
           // Handlebars object -----------------------
           var cardHTML = compiled(movie);
@@ -112,18 +113,21 @@ function searchThroughTvApi(target,input_src,my_api){
         // target.html('');
 
         for (var i = 0; i < tv_series.length; i++) {
-          var tv_show = tv_series[i];
-          var vote = tv_show['vote_average'];
-          var id = tv_show['id'];
+          var movie = tv_series[i];
+          var vote = movie['vote_average'];
+          var id = movie['id'];
           var stars_rating = Math.round(vote/2);
-          var lang_code = tv_show["original_language"];
+          var lang_code = movie["original_language"];
           var lang_name = getLanguageName(lang_code);//function from lang.js
 
-          tv_show['lang_name'] = lang_name ;
-          tv_show['tv-show'] = "tv-show" ;
+          // var poster = getPosterImage(movie);
+
+          movie['lang_name'] = lang_name ;
+          movie['tv-show'] = "tv-show" ;
+          movie['poster'] = getPosterImage(movie);
 
           // Handlebars object -----------------------
-          var tvHTML = compiled(tv_show);
+          var tvHTML = compiled(movie);
 
           target.append(tvHTML);
           getStarsRating(id,stars_rating);
@@ -141,6 +145,19 @@ function searchThroughTvApi(target,input_src,my_api){
   });
 }
 
+// -----start new function---------------------------
+function getPosterImage(movie){
+  var dim = "w185";
+  var url = movie["poster_path"];
+
+  if (url === null){
+    var poster = "img/w185.jpg";
+    return poster;
+  }else{
+    var poster = "https://image.tmdb.org/t/p/" + dim + url;
+    return poster;
+    }
+}
 
 // -----start new function---------------------------
 
