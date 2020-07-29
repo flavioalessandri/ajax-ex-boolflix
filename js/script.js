@@ -207,7 +207,7 @@ function mouseEnterContent(){
 function mouseLeaveContent(){
   console.log("enter content");
   $(document).on("mouseleave",'#container li.movie', function(){
-    $(this).children('img.poster').fadeTo("slow",1);
+    $(this).children('img.poster').fadeIn("slow");
   });
 }
 

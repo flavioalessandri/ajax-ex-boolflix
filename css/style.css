@@ -6,21 +6,76 @@
 
 body{
   font-family: 'Mulish', sans-serif;
+  letter-spacing: 1px;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 14px;
   color:#370617;
+  background-color: #5C7084;
+}
+
+header{
+  position: fixed;
+  top:0;
+  left:0;
+  padding:0 50px;
+  color:white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1E3231;
+
+  width:100%;
+  height:80px;
+  z-index: 90;
+}
+
+button{
+  padding:6px 30px;
+  border:1px solid white;
+  border-radius: 3px;
+  background-color: #26403E;
+  color: white;
+}
+
+input{
+  padding:6px 30px;
+  font-weight: bold;
+  border:none;
+  border-bottom:1px solid white;
+
+  background-color: #365956;
+  color: white;
+  font-weight: bold;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+ color: white;
+ font-weight: bold;
 }
 
 h1{
+  animation: anim 3s infinite;
   font-size: 30px;
   color: white;
   text-align: center;
-  padding: 30px  0;
-  background-color: #9D0208;
+  transition: 1s;
+}
+
+h1::first-letter{
+  color:#CF1259;
+}
+
+@keyframes anim {
+  0% {letter-spacing: 1px;}
+  50% {letter-spacing: 15px;}
+  70% {letter-spacing: -2px;}
+  100% {letter-spacing: 1px;}
 }
 
 
 #container{
+  margin-top: 100px;
+  padding:0 50px;
   display: flex;
   justify-content: center;
   width:100%;
@@ -29,46 +84,46 @@ h1{
 }
 
 li.movie{
+  color: white;
   position: relative;
 
   top:0;
   left:0;
 
-
-  margin:0 5px 5px 5px;
-  border:1px solid black;
+  margin:5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: flex-start;
-  background-color: lightgreen;
+  background-color: #365956;
 }
 
-.movie.size{
+li.movie.size{
   width:200px;
   height: 285px;
   overflow:hidden;
 }
 
-li.movie>span:first-of-type{
-  padding-top: 30px;
-}
+
 
 li.movie>span{
-  padding-left: 10px;
-  padding-right:10px;
+  padding:5px 10px 2px 10px;
+}
+
+li.movie>span:first-of-type{
+  padding-top: 15px;
 }
 
 .yellow{
   color:yellow;
 }
 
-.movie .language{
+li.movie .language{
   width:40px;
   height:auto;
 }
 
-.movie img.poster{
+li.movie img.poster{
   position: absolute;
   top:0;
   left:0;
@@ -90,7 +145,6 @@ li.movie>span{
   z-index: 2;
 }
 
-
 .movie .overview{
   overflow-y: scroll;
   scrollbar-width: none;  /* Firefox */
@@ -101,10 +155,9 @@ li.movie>span{
   display: none;
 }
 
-/* hover section */
-/* .movie:hover .poster{
-  opacity:0;
-} */
+
+
+
 
 @media all and (max-width: 360px){
 
