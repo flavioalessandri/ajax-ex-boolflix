@@ -56,16 +56,17 @@ function searchThroughMovieApi(target,input_src,my_api){
 
           // get vote parameters and switch them to font-awesome stars
           var vote = movie['vote_average'];
-          movie.stars = starRatingfunction(vote);
-
+          var stars_rating = Math.round(vote/2);
+          movie.stars = starRatingfunction(stars_rating);
+          movie['vote_average'] = stars_rating;
           // add lang parameters form lang.js
           var lang_code = movie["original_language"];
           var lang_name = getLanguageName(lang_code);//function from lang.js
           movie['lang_name'] = lang_name ;
 
           movie['film'] = "film" ;
-          movie['poster'] = getPosterImage(movie_serie);
-
+          movie['poster'] = getPosterImage(movie_serie)[0];
+          movie['image_not_found']= getPosterImage(movie_serie)[1];
           // Append Handlebars template compiled to body--
           var cardHTML = compiled(movie);
           target.append(cardHTML);
@@ -118,8 +119,9 @@ function searchThroughTvApi(target,input_src,my_api){
 
           // get vote parameters and switch them to font-awesome stars
           var vote = serie['vote_average'];
-          serie.stars = starRatingfunction(vote);
-
+          var stars_rating = Math.round(vote/2);
+          serie.stars = starRatingfunction(stars_rating);
+          serie['vote_average'] = stars_rating;
           // add lang parameters form lang.js
           var lang_code = serie["original_language"];
           var lang_name = getLanguageName(lang_code);//function from lang.js
@@ -128,9 +130,12 @@ function searchThroughTvApi(target,input_src,my_api){
           serie['tv-show'] = "tv-show" ;
 
           // insert poster image
-          serie['poster'] = getPosterImage(movie_serie);
+
+          serie['poster'] = getPosterImage(movie_serie)[0];
+          serie['image_not_found']= getPosterImage(movie_serie)[2];
 
           // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
+          var tvHTML = compiled(serie);
           target.append(tvHTML);
         } // end of FOR cycle through movies
 
@@ -148,22 +153,29 @@ function searchThroughTvApi(target,input_src,my_api){
 
 // -----start new function---------------------------
 function getPosterImage(movie_serie){
-  var dim = "w185";
+  var not = movie_serie["image_not_found"];
+  var dim = "w342";
+  // var dim = "w185";
   var url = movie_serie["poster_path"];
 
+  // if no poster images found
   if (url === null){
     var poster = "img/w185.jpg";
-    return poster;
+    not_movie_img = movie_serie['original_title'];
+    not_serie_img = movie_serie['original_name'];
+    return [poster, not_movie_img,not_serie_img];
+
   }else{
     var poster = "https://image.tmdb.org/t/p/" + dim + url;
-    return poster;
+    not = "";
+    return [poster, not];
     }
 }
 
 // -----start new function---------------------------
 
-function starRatingfunction(vote){
-  var stars_rating = Math.round(vote/2);
+function starRatingfunction(stars_rating){
+
   var star_list ="";
   for (var j = 0; j < 5; j++){
     if(j < stars_rating){
@@ -174,12 +186,38 @@ function starRatingfunction(vote){
   }return star_list;
 }
 
+function mouseEnterDropdown(){
+  var parent_dropdown =  $('#navbar-content .link .parent_dropdown');
+
+  // function when mouse enter on the parent-dropdown
+  parent_dropdown.on('mouseenter', function() {//when mouse over the class parent_dropdown
+      $(this).children('span').addClass('color');
+      $(this).children('.dropdown').addClass('active');
+      $(this).children('.dropdown').removeClass('hidden'); //make the dropdown of this element visible
+  });
+}
+
+function mouseEnterContent(){
+  console.log("enter content");
+  $(document).on("mouseenter",'#container li.movie', function(){
+    $(this).children('img.poster').fadeOut("fast");
+  });
+}
+
+function mouseLeaveContent(){
+  console.log("enter content");
+  $(document).on("mouseleave",'#container li.movie', function(){
+    $(this).children('img.poster').fadeTo("slow",1);
+  });
+}
 
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
-  // fareLog();
-  inputContentRequest();
+  getInputValue();
+  mouseEnterContent();
+  mouseLeaveContent();
+  // inputContentRequest();
 
 }
 
