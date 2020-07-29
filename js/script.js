@@ -40,7 +40,6 @@ function searchThroughMovieApi(target,input_src,my_api){
     success : function(data, results){
 
       var movies = data['results'];
-      console.log("data['results']",results );
 
       if (movies.length>0){
         console.log(movies,"movies");
@@ -48,26 +47,28 @@ function searchThroughMovieApi(target,input_src,my_api){
         // Handlebars section-----------------------
         var template = $('#template').html();
         var compiled = Handlebars.compile( template);
-        // var target = $('#container');
-        // target.html('');
 
+        // starting FOR cycle through movies
         for (var i = 0; i < movies.length; i++) {
           var movie = movies[i];
-          var vote = movie['vote_average'];
+          var movie_serie = movies[i];
           var id = movie['id'];
-          var stars_rating = Math.round(vote/2);
+
+          // get vote parameters and switch them to font-awesome stars
+          var vote = movie['vote_average'];
+          movie.stars = starRatingfunction(vote);
+
+          // add lang parameters form lang.js
           var lang_code = movie["original_language"];
           var lang_name = getLanguageName(lang_code);//function from lang.js
-
           movie['lang_name'] = lang_name ;
+
           movie['film'] = "film" ;
-          movie['poster'] = getPosterImage(movie);
+          movie['poster'] = getPosterImage(movie_serie);
 
-          // Handlebars object -----------------------
+          // Append Handlebars template compiled to body--
           var cardHTML = compiled(movie);
-
           target.append(cardHTML);
-          getStarsRating(id,stars_rating);
         }// Main for cycle end
 
       } else{
@@ -81,7 +82,6 @@ function searchThroughMovieApi(target,input_src,my_api){
     }
   });
 }
-
 
 // -----start new function---------------------------
 function searchThroughTvApi(target,input_src,my_api){
@@ -109,29 +109,30 @@ function searchThroughTvApi(target,input_src,my_api){
         // Handlebars section-----------------------
         var template = $('#template').html();
         var compiled = Handlebars.compile( template);
-        // var target = $('#container');
-        // target.html('');
 
+        // starting FOR cycle through tv-series
         for (var i = 0; i < tv_series.length; i++) {
-          var movie = tv_series[i];
-          var vote = movie['vote_average'];
-          var id = movie['id'];
-          var stars_rating = Math.round(vote/2);
-          var lang_code = movie["original_language"];
+          var serie = tv_series[i];
+          var movie_serie = tv_series[i];
+          var id = serie['id'];
+
+          // get vote parameters and switch them to font-awesome stars
+          var vote = serie['vote_average'];
+          serie.stars = starRatingfunction(vote);
+
+          // add lang parameters form lang.js
+          var lang_code = serie["original_language"];
           var lang_name = getLanguageName(lang_code);//function from lang.js
+          serie['lang_name'] = lang_name ;
 
-          // var poster = getPosterImage(movie);
+          serie['tv-show'] = "tv-show" ;
 
-          movie['lang_name'] = lang_name ;
-          movie['tv-show'] = "tv-show" ;
-          movie['poster'] = getPosterImage(movie);
+          // insert poster image
+          serie['poster'] = getPosterImage(movie_serie);
 
-          // Handlebars object -----------------------
-          var tvHTML = compiled(movie);
-
+          // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
           target.append(tvHTML);
-          getStarsRating(id,stars_rating);
-        }// Main for cycle end
+        } // end of FOR cycle through movies
 
       } else{
         alert("No Tv Series Found");
@@ -146,9 +147,9 @@ function searchThroughTvApi(target,input_src,my_api){
 }
 
 // -----start new function---------------------------
-function getPosterImage(movie){
+function getPosterImage(movie_serie){
   var dim = "w185";
-  var url = movie["poster_path"];
+  var url = movie_serie["poster_path"];
 
   if (url === null){
     var poster = "img/w185.jpg";
@@ -161,17 +162,16 @@ function getPosterImage(movie){
 
 // -----start new function---------------------------
 
-function getStarsRating(id,stars_rating){
-  console.log("--------getStarsRating()----------");
-  $('li[date-id="'+id+'"]').each(function(){
-    for (var i = 0; i < 5; i++) {
-      if(i<stars_rating){
-        $(this).children('.rating').append("<i class= 'yellow fas fa-star'></i>");
-      }else{
-        $(this).children('.rating').append("<i class= 'fas fa-star'></i>");
-      }
+function starRatingfunction(vote){
+  var stars_rating = Math.round(vote/2);
+  var star_list ="";
+  for (var j = 0; j < 5; j++){
+    if(j < stars_rating){
+      star_list += "<i class='yellow fas fa-star'></i>";
+    }else{
+      star_list += "<i class='far fa-star'></i>";
     }
-  });
+  }return star_list;
 }
 
 
