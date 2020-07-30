@@ -169,11 +169,14 @@ li.movie img.poster{
 }
 
 .movie .overview{
+  margin: 0 15px;
+  padding-bottom: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   height: 114px;
   overflow-y: scroll;
+  border: 1px solid white;
   scrollbar-width: none;  /* Firefox */
 }
 
@@ -182,12 +185,17 @@ li.movie img.poster{
   display: none;
 }
 
+.movie .cast{
+  padding: 5px 15px;
+  list-style-type: none;
+}
+
 
 .movie:hover{
   cursor: pointer;
 }
 
-button:hover{
+#src_btn:hover{
   cursor:pointer;
   background-color: #CF1259;
 }

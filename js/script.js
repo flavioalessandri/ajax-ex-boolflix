@@ -64,12 +64,17 @@ function searchThroughMovieApi(target,input_src,my_api){
           var lang_name = getLanguageName(lang_code);//function from lang.js
           movie['lang_name'] = lang_name ;
 
+
           movie['film'] = "film" ;
           movie['poster'] = getPosterImage(movie_serie)[0];
           movie['image_not_found']= getPosterImage(movie_serie)[1];
           // Append Handlebars template compiled to body--
           var cardHTML = compiled(movie);
           target.append(cardHTML);
+
+          movie['character'] = getActors(id,my_api);
+          console.log("movie[character] ..............", movie.character);
+
         }// Main for cycle end
 
       } else{
@@ -79,7 +84,7 @@ function searchThroughMovieApi(target,input_src,my_api){
 
     error: function(errors){
       var errors = errors['status'];
-      alert("errore "+errors);
+      console.log("errore searchThroughMovieApi "+errors);
     }
   });
 }
@@ -132,10 +137,12 @@ function searchThroughTvApi(target,input_src,my_api){
 
           serie['poster'] = getPosterImage(movie_serie)[0];
           serie['image_not_found']= getPosterImage(movie_serie)[2];
-          serie['character'] = getCharacterInfo(id,my_api);
+
+
           // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
           var tvHTML = compiled(serie);
           target.append(tvHTML);
+          getActors(id,my_api);
 
 
         } // end of FOR cycle through movies
@@ -147,17 +154,18 @@ function searchThroughTvApi(target,input_src,my_api){
 
     error: function(errors){
       var errors = errors['status'];
-      alert("errore "+errors);
+      console.log("errore searchThroughTvApi "+errors);
     }
   });
 }
 
-function getCharacterInfo(id,my_api){
+// -----start new function---------------------------
+function getActors(id,my_api){
 
-  console.log("getCharacterInfo()",my_api);
+  console.log("getActors()",id,my_api);
 
   $.ajax({
-    url: 'https://api.themoviedb.org/3/movie/'+ 711 +'/credits',
+    url: 'https://api.themoviedb.org/3/movie/'+ id +'/credits',
 
     method: "GET",
 
@@ -167,14 +175,28 @@ function getCharacterInfo(id,my_api){
     },
 
     success: function(data, state){
+        var actors ="";
 
-        var car = data['results'];
-        console.log("car", car);
+        var character = data['cast'];
+        console.log("character ", character );
+        if(character.length>0){
+
+        for (var k = 0; k< 5; k++) {
+
+          if (k !== undefined){
+            actors = "<li>" + character[k]['name'] + "</li>";
+            console.log(actors);
+            $('li[data-id = "' + id + '"]').find('ul').append(actors);
+          }
+        }
+        } else{
+          console.log("no actors found");
+        }return actors;
     },
 
     error: function(errors){
       var errors = errors['status'];
-      alert("errore "+errors);
+      console.log("Errore getActors "+errors);
     }
   });
 }
@@ -214,27 +236,27 @@ function getStarRating(stars_rating){
   }return star_list;
 }
 
+// -----start new function---------------------------
 function onMouseEnter(){
   console.log("enter content");
   $(document).on("mouseenter",'#container li.movie', function(){
     $(this).children('img.poster , .image_not_found').fadeOut("fast");
-
   });
 }
 
+// -----start new function---------------------------
 function onMouseLeave(){
   console.log("enter content");
   $(document).on("mouseleave",'#container li.movie', function(){
     $(this).children('img.poster, .image_not_found').fadeIn("fast");
-
   });
 }
 
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
+  onClickInput();
   getInputValue()
-  // onClickInput();
   onMouseEnter();
   onMouseLeave();
 }
