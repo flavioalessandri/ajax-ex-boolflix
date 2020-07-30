@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
-    <li class="movie" data-type="{{film}}{{tv-show}}" data-id="{{id}}" data-rate={{vote_average}}>
+    <li class="movie" data-type="{{film}}{{tv-show}}" data-id="{{id}}">
       <img class="poster" src="{{poster}}" alt="{{poster}}"> <br>
 
       <span class="title title_col"><strong>Title: </strong><span class = "text_col">{{title}}{{name}}</span></span>
@@ -26,13 +26,14 @@
       <span>
          <img class="language" src="img/{{original_language}}.png" alt="{{lang_name}}"> <br>
       </span>
-      <!-- <span class="vote"> {{vote_average}}</span> -->
       <span class="rating"><strong>Vote: </strong>{{{stars}}} {{vote_average}}</span>
       <span class="overview title_col"><strong>Overview: </strong><span class = "text_col">{{{overview}}}</span></span>
       <span class="image_not_found">{{{image_not_found}}}</span>
       <span>
          <ul class="cast"></ul>
       </span>
+      <span class="genres"></span>
+
     </li>
   </script>
 

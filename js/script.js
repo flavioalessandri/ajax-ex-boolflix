@@ -16,14 +16,14 @@ function getInputValue(){
   input_value.val('');
 
   console.log("valore input: ", input_src);
-  var my_api = "8de22b0db5bf3f29ea5ff07f53e09484";
-  searchThroughMovieApi(target,input_src,my_api);
-  searchThroughTvApi(target,input_src,my_api);
+  var my_api_key = "8de22b0db5bf3f29ea5ff07f53e09484";
+  searchThroughMovieApi(target,input_src,my_api_key);
+  searchThroughTvApi(target,input_src,my_api_key);
 
 }
 
 // -----start new function---------------------------
-function searchThroughMovieApi(target,input_src,my_api){
+function searchThroughMovieApi(target,input_src,my_api_key){
   console.log("searchThrough---------Movie---------Api");
   $.ajax({
 
@@ -32,7 +32,7 @@ function searchThroughMovieApi(target,input_src,my_api){
     method: "GET",
 
     data: {
-      'api_key': my_api,
+      'api_key': my_api_key,
       'query': input_src,
       'language': 'it' //get italian title and informations
     },
@@ -54,6 +54,8 @@ function searchThroughMovieApi(target,input_src,my_api){
           var movie_serie = movies[i];
           var id = movie['id'];
 
+          var genre_ids = movie_serie['genre_ids']
+
           // get vote parameters and switch them to font-awesome stars
           var vote = movie['vote_average'];
           var stars_rating = Math.round(vote/2);
@@ -65,6 +67,10 @@ function searchThroughMovieApi(target,input_src,my_api){
           movie['lang_name'] = lang_name ;
 
 
+
+
+
+
           movie['film'] = "film" ;
           movie['poster'] = getPosterImage(movie_serie)[0];
           movie['image_not_found']= getPosterImage(movie_serie)[1];
@@ -72,8 +78,11 @@ function searchThroughMovieApi(target,input_src,my_api){
           var cardHTML = compiled(movie);
           target.append(cardHTML);
 
-          movie['character'] = getActors(id,my_api);
-          console.log("movie[character] ..............", movie.character);
+          getActors(id,my_api_key);
+
+          getGenre(my_api_key,genre_ids,id);
+
+
 
         }// Main for cycle end
 
@@ -90,7 +99,7 @@ function searchThroughMovieApi(target,input_src,my_api){
 }
 
 // -----start new function---------------------------
-function searchThroughTvApi(target,input_src,my_api){
+function searchThroughTvApi(target,input_src,my_api_key){
   console.log("------searchThrough---Tv-------Api--------------------");
   $.ajax({
 
@@ -99,7 +108,7 @@ function searchThroughTvApi(target,input_src,my_api){
     method: "GET",
 
     data: {
-      'api_key': my_api,
+      'api_key': my_api_key,
       'query': input_src,
       'language': 'it' //get italian title and informations
     },
@@ -121,8 +130,12 @@ function searchThroughTvApi(target,input_src,my_api){
           var serie = tv_series[i];
           var movie_serie = tv_series[i];
           var id = serie['id'];
+
+          var genre_ids = movie_serie['genre_ids']
+
           // get vote parameters and switch them to font-awesome stars
           var vote = serie['vote_average'];
+
           var stars_rating = Math.round(vote/2);
           serie.stars = getStarRating(stars_rating);
           serie['vote_average'] = stars_rating;
@@ -142,7 +155,11 @@ function searchThroughTvApi(target,input_src,my_api){
           // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
           var tvHTML = compiled(serie);
           target.append(tvHTML);
-          getActors(id,my_api);
+          getActors(id,my_api_key);
+
+          getGenre(my_api_key,genre_ids,id);
+
+
 
 
         } // end of FOR cycle through movies
@@ -160,9 +177,9 @@ function searchThroughTvApi(target,input_src,my_api){
 }
 
 // -----start new function---------------------------
-function getActors(id,my_api){
+function getActors(id,my_api_key){
 
-  console.log("getActors()",id,my_api);
+  console.log("---------getActors------");
 
   $.ajax({
     url: 'https://api.themoviedb.org/3/movie/'+ id +'/credits',
@@ -170,7 +187,7 @@ function getActors(id,my_api){
     method: "GET",
 
     data: {
-      'api_key': my_api,
+      'api_key': my_api_key,
       'language': 'it' //get italian title and informations
     },
 
@@ -178,14 +195,14 @@ function getActors(id,my_api){
         var actors ="";
 
         var character = data['cast'];
-        console.log("character ", character );
+
         if(character.length>0){
 
         for (var k = 0; k< 5; k++) {
 
           if (k !== undefined){
             actors = "<li>" + character[k]['name'] + "</li>";
-            console.log(actors);
+
             $('li[data-id = "' + id + '"]').find('ul').append(actors);
           }
         }
@@ -202,6 +219,47 @@ function getActors(id,my_api){
 }
 
 // -----start new function---------------------------
+function getGenre(my_api_key,genre_ids,id){
+  console.log("------getGenre-------",genre_ids);
+
+  $.ajax({
+    url: 'https://api.themoviedb.org/3/genre/movie/list?api_key=8de22b0db5bf3f29ea5ff07f53e09484&language=it',
+
+    method: "GET",
+
+    success: function(data, state){
+
+        var this_id = $('.movie[data-id = "'+id+'"]');
+        var genresLength = data['genres'].length;
+
+          for (var m = 0; m < genresLength; m++) {
+
+            var genKey = data['genres'][m]['id'];
+            var genName = data['genres'][m]['name'];
+
+            if (genre_ids.includes(genKey)){
+              this_id.find('.genres').append("<i>" + genName + "</i>");
+
+            } else{
+              console.log("niente genere");
+            }
+          }
+
+
+
+
+    },
+
+    error: function(errors){
+      var errors = errors['status'];
+      console.log("Errore getActors "+errors);
+    }
+  });
+
+}
+
+
+// -----start new function---------------------------
 function getPosterImage(movie_serie){
   var not = movie_serie["image_not_found"];
   var dim = "w342";
@@ -210,7 +268,7 @@ function getPosterImage(movie_serie){
 
   // if no poster images found
   if (url === null){
-    var poster = "img/w185.jpg";
+    var poster = "img/w342.jpg";
     not_movie_img = movie_serie['original_title'];
     not_serie_img = movie_serie['original_name'];
     return [poster, not_movie_img,not_serie_img];

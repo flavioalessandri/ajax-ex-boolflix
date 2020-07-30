@@ -8,7 +8,7 @@ body{
   font-family: 'Mulish', sans-serif;
   letter-spacing: 1px;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 14px;
   color:#370617;
   background-color: #5C7084;
 }
@@ -120,7 +120,7 @@ li.movie{
 }
 
 li.movie>span{
-  padding:10px 20px 10px 20px;
+  padding:5px 20px 5px 20px;
 }
 
 li.movie>span:first-of-type{
@@ -169,7 +169,7 @@ li.movie img.poster{
 }
 
 .movie .overview{
-  margin: 0 15px;
+  margin: 5px 15px 0 15px;
   padding-bottom: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 5;
@@ -186,10 +186,9 @@ li.movie img.poster{
 }
 
 .movie .cast{
-  padding: 5px 15px;
+  padding-top: 15px;
   list-style-type: none;
 }
-
 
 .movie:hover{
   cursor: pointer;
