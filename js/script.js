@@ -1,7 +1,7 @@
 
 // -----start new function---------------------------
 // define the Button used to get input value
-function inputContentRequest(){
+function onClickInput(){
   var btn = $('#src_btn');
   btn.click(getInputValue);
 }
@@ -57,7 +57,7 @@ function searchThroughMovieApi(target,input_src,my_api){
           // get vote parameters and switch them to font-awesome stars
           var vote = movie['vote_average'];
           var stars_rating = Math.round(vote/2);
-          movie.stars = starRatingfunction(stars_rating);
+          movie.stars = getStarRating(stars_rating);
           movie['vote_average'] = stars_rating;
           // add lang parameters form lang.js
           var lang_code = movie["original_language"];
@@ -120,7 +120,7 @@ function searchThroughTvApi(target,input_src,my_api){
           // get vote parameters and switch them to font-awesome stars
           var vote = serie['vote_average'];
           var stars_rating = Math.round(vote/2);
-          serie.stars = starRatingfunction(stars_rating);
+          serie.stars = getStarRating(stars_rating);
           serie['vote_average'] = stars_rating;
           // add lang parameters form lang.js
           var lang_code = serie["original_language"];
@@ -174,51 +174,40 @@ function getPosterImage(movie_serie){
 
 // -----start new function---------------------------
 
-function starRatingfunction(stars_rating){
+function getStarRating(stars_rating){
 
   var star_list ="";
   for (var j = 0; j < 5; j++){
     if(j < stars_rating){
-      star_list += "<i class='yellow fas fa-star'></i>";
+      star_list += "<i class='colored fas fa-star'></i>";
     }else{
       star_list += "<i class='far fa-star'></i>";
     }
   }return star_list;
 }
 
-function mouseEnterDropdown(){
-  var parent_dropdown =  $('#navbar-content .link .parent_dropdown');
-
-  // function when mouse enter on the parent-dropdown
-  parent_dropdown.on('mouseenter', function() {//when mouse over the class parent_dropdown
-      $(this).children('span').addClass('color');
-      $(this).children('.dropdown').addClass('active');
-      $(this).children('.dropdown').removeClass('hidden'); //make the dropdown of this element visible
-  });
-}
-
-function mouseEnterContent(){
+function onMouseEnter(){
   console.log("enter content");
   $(document).on("mouseenter",'#container li.movie', function(){
-    $(this).children('img.poster').fadeOut("fast");
+    $(this).children('img.poster , .image_not_found').fadeOut("fast");
+
   });
 }
 
-function mouseLeaveContent(){
+function onMouseLeave(){
   console.log("enter content");
   $(document).on("mouseleave",'#container li.movie', function(){
-    $(this).children('img.poster').fadeIn("slow");
+    $(this).children('img.poster, .image_not_found').fadeIn("fast");
+
   });
 }
 
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
-  getInputValue();
-  mouseEnterContent();
-  mouseLeaveContent();
-  // inputContentRequest();
-
+  onClickInput();
+  onMouseEnter();
+  onMouseLeave();
 }
 
 // 1) Document Ready-----
