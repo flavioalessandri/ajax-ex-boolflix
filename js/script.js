@@ -116,7 +116,6 @@ function searchThroughTvApi(target,input_src,my_api){
           var serie = tv_series[i];
           var movie_serie = tv_series[i];
           var id = serie['id'];
-
           // get vote parameters and switch them to font-awesome stars
           var vote = serie['vote_average'];
           var stars_rating = Math.round(vote/2);
@@ -133,16 +132,45 @@ function searchThroughTvApi(target,input_src,my_api){
 
           serie['poster'] = getPosterImage(movie_serie)[0];
           serie['image_not_found']= getPosterImage(movie_serie)[2];
-
+          serie['character'] = getCharacterInfo(id,my_api);
           // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
           var tvHTML = compiled(serie);
           target.append(tvHTML);
+
+
         } // end of FOR cycle through movies
 
       } else{
         alert("No Tv Series Found");
       }
     }, //end of object - success
+
+    error: function(errors){
+      var errors = errors['status'];
+      alert("errore "+errors);
+    }
+  });
+}
+
+function getCharacterInfo(id,my_api){
+
+  console.log("getCharacterInfo()",my_api);
+
+  $.ajax({
+    url: 'https://api.themoviedb.org/3/movie/'+ 711 +'/credits',
+
+    method: "GET",
+
+    data: {
+      'api_key': my_api,
+      'language': 'it' //get italian title and informations
+    },
+
+    success: function(data, state){
+
+        var car = data['results'];
+        console.log("car", car);
+    },
 
     error: function(errors){
       var errors = errors['status'];
@@ -205,7 +233,8 @@ function onMouseLeave(){
 // MAIN FUNCTION CONTAINER ------------------------
 
 function init(){
-  onClickInput();
+  getInputValue()
+  // onClickInput();
   onMouseEnter();
   onMouseLeave();
 }

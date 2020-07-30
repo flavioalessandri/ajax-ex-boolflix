@@ -18,17 +18,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Handlebars Template -->
   <script id="template" type="text/x-handlebars-template">
-    <li class="movie size" date-type="{{film}}{{tv-show}}" date-id="{{id}}" date-rate={{vote_average}}>
+    <li class="movie" date-type="{{film}}{{tv-show}}" date-id="{{id}}" date-rate={{vote_average}}>
       <img class="poster" src="{{poster}}" alt="{{poster}}"> <br>
 
-      <span class="title"><strong>Title: </strong>{{title}}{{name}}</span>
-      <span class="original_title"><strong>Original Title: </strong>{{original_title}}{{original_name}}</span>
+      <span class="title title_col"><strong>Title: </strong><span class = "text_col">{{title}}{{name}}</span></span>
+      <span class="original_title title_col"><strong>Original Title: </strong><span class = "text_col">{{original_title}}{{original_name}}</span></span>
       <span>
          <img class="language" src="img/{{original_language}}.png" alt="{{lang_name}}"> <br>
       </span>
       <!-- <span class="vote"> {{vote_average}}</span> -->
       <span class="rating"><strong>Vote: </strong>{{{stars}}} {{vote_average}}</span>
-      <span class="overview"><strong>Overview: </strong>{{{overview}}}</span>
+      <span class="overview title_col"><strong>Overview: </strong><span class = "text_col">{{{overview}}}</span></span>
       <span class="image_not_found">{{{image_not_found}}}</span>
     </li>
   </script>
@@ -41,7 +41,7 @@
   <header>
     <h1>Boolflix</h1>
     <div id="search_bar" class="">
-      <input id="src_input" type="text" name="" placeholder="Insert a Title" value="">
+      <input id="src_input" type="text" name="" placeholder="Insert a Title" value="matrix">
       <button id="src_btn" type="button" name="button">Search</button>
     </div>
   </header>
