@@ -9,7 +9,7 @@ function onClickInput(){
 // -----start new function---------------------------
 function getInputValue(){
   // get input value after button click
-  var target = $('#container');
+  var target = $('.container');
   target.html('');
   var input_value = $('#src_input');
   var input_src =$('#src_input').val();
@@ -54,6 +54,7 @@ function searchMovieTv(type,target,input_src,my_api_key){
           // var movies = data['results'][i];
           var movie = movies[i];
 
+
           var id = movie.id;
           var genre_ids = movie.genre_ids;
 
@@ -62,6 +63,7 @@ function searchMovieTv(type,target,input_src,my_api_key){
           var stars_rating = Math.round(vote/2);
           movie.stars = getStarRating(stars_rating);
           vote = stars_rating;
+          movie.card = type;
 
           // add lang parameters form lang.js
           var lang_code = movie.original_language;
@@ -75,7 +77,12 @@ function searchMovieTv(type,target,input_src,my_api_key){
 
           // Append Handlebars template compiled to body--
           var cardHTML = compiled(movie);
-          target.append(cardHTML);
+
+          if(type == "movie"){
+            $('#container_movie').append(cardHTML);
+          } else{
+            $('#container_tv').append(cardHTML);
+          }
 
           getActors(type,id,my_api_key);
           getGenre(type,my_api_key,genre_ids,id);
@@ -159,7 +166,7 @@ function getGenre(type,my_api_key,genre_ids,id){
 
     success: function(data, state){
 
-        var this_id = $('.movie[data-id = "'+id+'"]');
+        var this_id = $('li[data-id = "'+id+'"]');
         var genresLength = data['genres'].length;
         var genreApiSort = data['genres'].sort((a, b) => (a.id > b.id) ? 1 : -1)
         var myGenreSort= genre_ids.sort(function(c,d) { return c - d; });
@@ -241,7 +248,7 @@ function getStarRating(stars_rating){
 // -----start new function---------------------------
 function onMouseEnter(){
   console.log("enter content");
-  $(document).on("mouseenter",'#container li.movie', function(){
+  $(document).on("mouseenter",'.container li.movie', function(){
     $(this).children('img.poster , .image_not_found').fadeOut("fast");
   });
 }
@@ -249,7 +256,7 @@ function onMouseEnter(){
 // -----start new function---------------------------
 function onMouseLeave(){
   console.log("enter content");
-  $(document).on("mouseleave",'#container li.movie', function(){
+  $(document).on("mouseleave",'.container li.movie', function(){
     $(this).children('img.poster, .image_not_found').fadeIn("fast");
   });
 }
