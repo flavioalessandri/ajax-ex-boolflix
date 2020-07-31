@@ -1,14 +1,14 @@
 
 // -----start new function---------------------------
-// define the Button used to get input value
 function onClickInput(){
+  // define the Button used to get input value
   var btn = $('#src_btn');
-  btn.click(getInputValue);
+  btn.on("click", (getInputValue));
 }
 
 // -----start new function---------------------------
-// get input value after button click
 function getInputValue(){
+  // get input value after button click
   var target = $('#container');
   target.html('');
   var input_value = $('#src_input');
@@ -17,17 +17,21 @@ function getInputValue(){
 
   console.log("valore input: ", input_src);
   var my_api_key = "8de22b0db5bf3f29ea5ff07f53e09484";
-  searchThroughMovieApi(target,input_src,my_api_key);
-  searchThroughTvApi(target,input_src,my_api_key);
 
+  var movie = "movie";
+  var tv_serie = "tv";
+  searchMovieTv(movie,target,input_src,my_api_key);
+  searchMovieTv(tv_serie,target,input_src,my_api_key);
 }
 
 // -----start new function---------------------------
-function searchThroughMovieApi(target,input_src,my_api_key){
-  console.log("searchThrough---------Movie---------Api");
+function searchMovieTv(type,target,input_src,my_api_key){
+  // call serieTv and Movie MovieDB Api
+  console.log("------searchMovieTv---------", type);
+
   $.ajax({
 
-    url: 'https://api.themoviedb.org/3/search/movie',
+    url: 'https://api.themoviedb.org/3/search/'+ type,
 
     method: "GET",
 
@@ -38,7 +42,6 @@ function searchThroughMovieApi(target,input_src,my_api_key){
     },
 
     success : function(data, results){
-
       var movies = data['results'];
 
       if (movies.length>0){
@@ -48,42 +51,43 @@ function searchThroughMovieApi(target,input_src,my_api_key){
 
         // starting FOR cycle through movies
         for (var i = 0; i < movies.length; i++) {
+          // var movies = data['results'][i];
           var movie = movies[i];
-          var movie_serie = movies[i];
-          var id = movie.id;
 
-          var genre_ids = movie_serie.genre_ids;
+          var id = movie.id;
+          var genre_ids = movie.genre_ids;
 
           // get vote parameters and switch them to font-awesome stars
           var vote = movie.vote_average;
           var stars_rating = Math.round(vote/2);
           movie.stars = getStarRating(stars_rating);
           vote = stars_rating;
+
           // add lang parameters form lang.js
           var lang_code = movie.original_language;
           var lang_name = getLanguageName(lang_code);//function from lang.js
           movie.lang_name = lang_name ;
 
-          movie.overview = getOverview(movie_serie);
-          console.log(movie.overview, "movie overview");
+          movie.overview = getOverview(movie);
+          movie.film = getCardType(movie,type);
+          movie.poster = getPosterImage(movie, type)[0];
+          movie.image_not_found= getPosterImage(movie, type)[1];
 
-          movie.film = "film" ;
-          movie.poster = getPosterImage(movie_serie)[0];
-          movie.image_not_found= getPosterImage(movie_serie)[1];
           // Append Handlebars template compiled to body--
           var cardHTML = compiled(movie);
           target.append(cardHTML);
 
-          getActors(id,my_api_key);
-
-          getGenre(my_api_key,genre_ids,id);
-
-
-
+          getActors(type,id,my_api_key);
+          getGenre(type,my_api_key,genre_ids,id);
         }// Main for cycle end
 
       } else{
-        alert("No Movies Found");
+        if (type === "movie"){
+          alert ("no film Found");
+
+        } else{
+          alert ("no serie Found");
+        }
       }
     }, //end of object - success
 
@@ -95,82 +99,21 @@ function searchThroughMovieApi(target,input_src,my_api_key){
 }
 
 // -----start new function---------------------------
-function searchThroughTvApi(target,input_src,my_api_key){
-  console.log("------searchThrough---Tv--Api--------------------");
-  $.ajax({
-
-    url: 'https://api.themoviedb.org/3/search/tv',
-
-    method: "GET",
-
-    data: {
-      'api_key': my_api_key,
-      'query': input_src,
-      'language': 'it' //get italian title and informations
-    },
-
-    success : function(data, results){
-
-      var tv_series = data['results'];
-
-
-      if (tv_series.length>0){
-
-        // Handlebars section-----------------------
-        var template = $('#template').html();
-        var compiled = Handlebars.compile( template);
-
-        // starting FOR cycle through tv-series
-        for (var i = 0; i < tv_series.length; i++) {
-          var serie = tv_series[i];
-          var movie_serie = tv_series[i];
-          var id = serie.id;
-          var genre_ids = movie_serie.genre_ids;
-
-          // get vote parameters and switch them to font-awesome stars
-          var vote = serie.vote_average;
-          var stars_rating = Math.round(vote/2);
-          serie.stars = getStarRating(stars_rating);
-          vote = stars_rating;
-          // add lang parameters form lang.js
-          var lang_code = serie.original_language;
-          var lang_name = getLanguageName(lang_code);//function from lang.js
-          serie.lang_name = lang_name ;
-          serie.tv_show = "tv_show" ;
-
-          serie.overview = getOverview(movie_serie);
-
-          // insert poster image
-          serie['poster'] = getPosterImage(movie_serie)[0];
-          serie['image_not_found']= getPosterImage(movie_serie)[2];
-
-          // Append Handlebars template compiled to body--          var tvHTML = compiled(serie);
-          var tvHTML = compiled(serie);
-          target.append(tvHTML);
-
-          getActors(id,my_api_key);
-          getGenre(my_api_key,genre_ids,id);
-
-        } // end of FOR cycle through movies
-
-      } else{
-        alert("No Tv Series Found");
-      }
-    }, //end of object - success
-
-    error: function(errors){
-      var errors = errors['status'];
-      console.log("errore searchThroughTvApi "+errors);
-    }
-  });
+function getCardType(movie,type){
+  if (type === "movie"){
+    movie.film = "film" ;
+    return movie.film;
+  } else{
+    movie.film="tv_serie";
+    return movie.film;
+  }
 }
 
 // -----start new function---------------------------
-function getActors(id,my_api_key){
-  console.log("---------getActors------");
+function getActors(type,id,my_api_key){
 
   $.ajax({
-    url: 'https://api.themoviedb.org/3/movie/'+ id +'/credits',
+    url: 'https://api.themoviedb.org/3/'+type+'/'+ id +'/credits',
 
     method: "GET",
 
@@ -195,8 +138,8 @@ function getActors(id,my_api_key){
         }
         } else{
           k = 5;
-            $('li[data-id = "' + id + '"]').find('.cast').text("No Actors List Found!");
-        }return actors;
+          $('li[data-id = "' + id + '"]').find('.cast').text("No Actors List Found!");
+        }
     },
 
     error: function(errors){
@@ -207,10 +150,10 @@ function getActors(id,my_api_key){
 }
 
 // -----start new function---------------------------
-function getGenre(my_api_key,genre_ids,id){
+function getGenre(type,my_api_key,genre_ids,id){
 
   $.ajax({
-    url: 'https://api.themoviedb.org/3/genre/movie/list?api_key=8de22b0db5bf3f29ea5ff07f53e09484&language=it',
+    url: 'https://api.themoviedb.org/3/genre/'+type+'/list?api_key=8de22b0db5bf3f29ea5ff07f53e09484&language=it',
 
     method: "GET",
 
@@ -247,27 +190,33 @@ function getGenre(my_api_key,genre_ids,id){
 }
 
 // -----start new function---------------------------
-function getOverview(movie_serie){
-  if(movie_serie.overview.length == 0){
-    movie_serie.overview = "No overview for this title";
-    return movie_serie.overview;
+function getOverview(movie){
+  if(movie.overview.length == 0){
+    movie.overview = "No overview for this title";
+    return movie.overview;
   } else{
-    return movie_serie.overview;
+    return movie.overview;
   }
 }
 
 // -----start new function---------------------------
-function getPosterImage(movie_serie){
-  var not = movie_serie.image_not_found;
+function getPosterImage(movie, type){
+  var not = movie.image_not_found;
   var dim = "w342";
-  var url = movie_serie.poster_path;
+  var url = movie.poster_path;
 
   // if no poster images found
   if (url === null) {
-    var poster = "img/w342.jpg";
-    not_movie_img = movie_serie.original_title;
-    not_serie_img = movie_serie.original_name;
-    return [poster, not_movie_img,not_serie_img];
+    if(type === "movie"){
+      var poster = "img/w342.jpg";
+      not_movie_img = movie.original_title;
+      return [poster, not_movie_img];
+
+    } else{
+      var poster = "img/w342.jpg";
+      not_movie_img = movie.original_name;
+      return [poster, not_movie_img];
+    }
 
   } else {
     var poster = "https://image.tmdb.org/t/p/" + dim + url;
@@ -308,7 +257,6 @@ function onMouseLeave(){
 // MAIN FUNCTION CONTAINER ------------------------
 function init(){
   onClickInput();
-  getInputValue()
   onMouseEnter();
   onMouseLeave();
 }
