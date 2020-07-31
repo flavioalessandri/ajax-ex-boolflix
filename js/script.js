@@ -203,7 +203,7 @@ function getActors(id,my_api_key){
           if (k !== undefined){
             actors = "<li>" + character[k]['name'] + "</li>";
 
-            $('li[data-id = "' + id + '"]').find('ul').append(actors);
+            $('li[data-id = "' + id + '"]').find('.cast').append(actors);
           }
         }
         } else{
@@ -220,7 +220,6 @@ function getActors(id,my_api_key){
 
 // -----start new function---------------------------
 function getGenre(my_api_key,genre_ids,id){
-  console.log("------getGenre-------",genre_ids);
 
   $.ajax({
     url: 'https://api.themoviedb.org/3/genre/movie/list?api_key=8de22b0db5bf3f29ea5ff07f53e09484&language=it',
@@ -231,16 +230,20 @@ function getGenre(my_api_key,genre_ids,id){
 
         var this_id = $('.movie[data-id = "'+id+'"]');
         var genresLength = data['genres'].length;
-        var genres_id_sorted= genre_ids.sort();
-        console.log(genres_id_sorted, "sorted");
+        var genreApiSort = data['genres'].sort((a, b) => (a.id > b.id) ? 1 : -1)
+        var myGenreSort= genre_ids.sort(function(c,d) { return c - d; });
+        console.log("myGenreSort------------------", myGenreSort);
 
           for (var m = 0; m < genresLength; m++) {
 
-            var genKey = data['genres'][m]['id'];
-            var genName = data['genres'][m]['name'];
+            var genKey = genreApiSort[m]['id'];
+            var genName = genreApiSort[m]['name'];
 
-            if (genres_id_sorted.includes(genKey)){
-              this_id.find('.genres').append("<i>" + genName + "</i>");
+            // var genKey = data['genres'][m]['id'];
+            // var genName = data['genres'][m]['name'];
+
+            if (myGenreSort.includes(genKey)){
+              this_id.find('.genres').append("<li> ID " + genKey +" : "+ genName +"</li>");
 
             } else {
               console.log("niente genere");
@@ -255,6 +258,9 @@ function getGenre(my_api_key,genre_ids,id){
   });
 
 }
+
+
+
 
 
 // -----start new function---------------------------
