@@ -199,10 +199,7 @@ li.movie img.poster{
   background-color: #CF1259;
 }
 
-
-
 @media all and (max-width: 720px){
-
 
   header{
     display: flex;
@@ -214,11 +211,11 @@ li.movie img.poster{
 
   #search_bar{
     min-width: 342px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   h1{
     animation: none;
     font-size: 30px;
@@ -226,8 +223,6 @@ li.movie img.poster{
     text-align: center;
     transition: 1s;
   }
-
-
   input{
     flex-grow: 1;
     margin-right: 5px;
@@ -245,9 +240,6 @@ li.movie img.poster{
     font-weight: bold;
     color: white;
   }
-
-
-
 }
 
 
@@ -265,16 +257,5 @@ li.movie img.poster{
     margin:5px;
   }
 
-  li.movie .language{
-    width:20px;
-    height:auto;
-  }
-
-  .movie .overview{
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    height: 70px;
-
-  }
 
 }

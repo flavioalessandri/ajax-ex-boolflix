@@ -231,29 +231,27 @@ function getGenre(my_api_key,genre_ids,id){
 
         var this_id = $('.movie[data-id = "'+id+'"]');
         var genresLength = data['genres'].length;
+        var genres_id_sorted= genre_ids.sort();
+        console.log(genres_id_sorted, "sorted");
 
           for (var m = 0; m < genresLength; m++) {
 
             var genKey = data['genres'][m]['id'];
             var genName = data['genres'][m]['name'];
 
-            if (genre_ids.includes(genKey)){
+            if (genres_id_sorted.includes(genKey)){
               this_id.find('.genres').append("<i>" + genName + "</i>");
 
-            } else{
+            } else {
               console.log("niente genere");
             }
           }
+      },
 
-
-
-
-    },
-
-    error: function(errors){
-      var errors = errors['status'];
-      console.log("Errore getActors "+errors);
-    }
+      error: function(errors){
+        var errors = errors['status'];
+        console.log("Errore getActors "+errors);
+      }
   });
 
 }
